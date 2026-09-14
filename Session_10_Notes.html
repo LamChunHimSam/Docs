@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session 10 — Unpriced Securities & SAFEs</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0e0c;
+    --paper: #f7f4ef;
+    --cream: #ede9e1;
+    --rule: #d4cfc5;
+    --accent: #c0392b;
+    --accent2: #1a6b3c;
+    --accent3: #1a3a6b;
+    --muted: #6b6760;
+    --tag-bg: #e8e4dc;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding: 2.5rem 3rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 1rem;
+  }
+  header .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.6rem;
+    line-height: 1.1;
+    font-weight: 400;
+  }
+  header h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .header-meta {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* NAV */
+  nav {
+    border-bottom: 1px solid var(--rule);
+    padding: 0 3rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  nav a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    padding: 0.9rem 1.2rem;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  nav a:hover, nav a.active {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+
+  /* LAYOUT */
+  .container { max-width: 900px; margin: 0 auto; padding: 3rem 3rem; }
+
+  /* SECTIONS */
+  section { margin-bottom: 4rem; }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+  }
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  p { margin-bottom: 0.9rem; color: #2a2826; }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--cream);
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .callout.green { border-left-color: var(--accent2); }
+  .callout.blue { border-left-color: var(--accent3); }
+  .callout strong { font-weight: 500; }
+  .callout-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  /* COMPARISON TABLE */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 14px;
+  }
+  .compare-table th {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.7rem 1rem;
+    text-align: left;
+  }
+  .compare-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: var(--cream); }
+  .compare-table td:first-child {
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--muted);
+    width: 160px;
+  }
+
+  /* FORMULA BLOCKS */
+  .formula-block {
+    background: var(--ink);
+    color: #e8e4dc;
+    padding: 1.2rem 1.5rem;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    margin: 1rem 0;
+  }
+  .formula-block .comment { color: #8a8680; font-size: 11px; }
+  .formula-block .highlight { color: #e8a87c; }
+  .formula-block .green { color: #7ec99a; }
+
+  /* STEP-BY-STEP */
+  .steps { counter-reset: step; list-style: none; margin: 1rem 0; }
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    align-items: start;
+  }
+  .steps li::before {
+    content: counter(step);
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--accent);
+    line-height: 1.4;
+    border-right: 1px solid var(--rule);
+    padding-right: 0.8rem;
+    text-align: right;
+  }
+  .steps li .step-body { padding-top: 0.1rem; }
+  .steps li .step-title { font-weight: 500; margin-bottom: 0.2rem; }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 2rem 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .tl-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    position: relative;
+  }
+  .tl-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--ink);
+    z-index: 1;
+    margin-bottom: 0.6rem;
+  }
+  .tl-dot.accent { background: var(--accent); }
+  .tl-dot.green { background: var(--accent2); }
+  .tl-line {
+    flex: 1;
+    height: 2px;
+    background: var(--rule);
+    min-width: 40px;
+    margin-top: -7px;
+  }
+  .tl-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--muted);
+  }
+  .tl-desc {
+    font-size: 12px;
+    text-align: center;
+    max-width: 110px;
+    margin-top: 0.3rem;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  /* ─── INTERACTIVE CAP TABLE ─── */
+  #cap-table-section {
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  .ct-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+  }
+  .ct-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .scenario-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .tab-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .tab-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .workings {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    line-height: 2;
+    margin-bottom: 1.5rem;
+  }
+  .w-label { color: var(--muted); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .w-val { color: var(--ink); font-weight: 500; }
+  .w-highlight { color: var(--accent); font-weight: 500; }
+  .w-green { color: var(--accent2); font-weight: 500; }
+  .w-row { display: flex; justify-content: space-between; align-items: center; padding: 0.2rem 0; border-bottom: 1px solid var(--cream); }
+  .w-row:last-child { border-bottom: none; }
+  .w-section-head {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0.6rem 0 0.2rem;
+    font-weight: 500;
+  }
+
+  /* cap table output */
+  .ct-output { overflow-x: auto; }
+  table.cap-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .cap-tbl th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    padding: 0.6rem 1rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .cap-tbl th:first-child { text-align: left; }
+  .cap-tbl td {
+    padding: 0.7rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cap-tbl td:first-child { text-align: left; font-weight: 500; }
+  .cap-tbl tr.total-row td {
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 500;
+    border-bottom: none;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+  .badge-disc { background: #fdf0e0; color: #a0522d; border: 1px solid #e8c9a0; }
+  .badge-cap  { background: #e0f0e8; color: #1a6b3c; border: 1px solid #a0d4b8; }
+
+  /* bar chart */
+  .bar-chart { display: flex; gap: 0; height: 32px; border-radius: 3px; overflow: hidden; margin: 1.5rem 0 0.5rem; }
+  .bar-seg { display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', monospace; font-size: 10px; color: #fff; transition: flex 0.4s ease; white-space: nowrap; overflow: hidden; }
+  .bar-seg.founder { background: var(--accent3); }
+  .bar-seg.angel   { background: var(--accent);  }
+  .bar-seg.vc      { background: var(--accent2); }
+  .bar-legend { display: flex; gap: 1.5rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 12px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* intuition box */
+  .intuition {
+    margin-top: 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .intuition strong { color: var(--ink); font-weight: 500; }
+
+  /* quote */
+  blockquote {
+    border-left: 3px solid var(--rule);
+    padding: 0.6rem 1.2rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* tag */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    color: var(--muted);
+    margin-right: 0.4rem;
+  }
+
+  /* divider */
+  hr { border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="eyebrow">Entrepreneurial Finance & Venture Capital · Imperial Business School</div>
+    <h1>Session 10<br><em>Unpriced Securities</em> & SAFEs</h1>
+  </div>
+  <div class="header-meta">
+    Prof. Ramana Nanda<br>
+    May 14, 2026<br>
+    Stream 2
+  </div>
+</header>
+
+<nav>
+  <a href="#overview" class="active">Overview</a>
+  <a href="#mechanics">Mechanics</a>
+  <a href="#comparison">Comparison</a>
+  <a href="#assignment">Assignment</a>
+  <a href="#intuition">Intuition</a>
+</nav>
+
+<div class="container">
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="section-label">01 — Context</div>
+    <h2>Why Unpriced Securities Exist</h2>
+    <p>Traditional VC financing requires agreeing on a price (valuation) upfront. As the cost of starting companies fell and more non-institutional investors entered the ecosystem, pricing early-stage startups became difficult, slow, and contentious.</p>
+    <p>Unpriced securities solve this by <strong>deferring pricing</strong> to the next round. The investor gives money now; the contract specifies the rules for determining how much equity they'll receive later.</p>
+
+    <div class="callout">
+      <div class="callout-label">Key idea</div>
+      The angel doesn't receive shares at the time of investment. They receive a <strong>right to convert</strong> into shares at the next priced round, at a price determined by the round — subject to a discount or cap.
+    </div>
+
+    <h3>Timeline</h3>
+    <div class="timeline">
+      <div class="tl-node">
+        <div class="tl-dot accent"></div>
+        <div class="tl-label">Seed</div>
+        <div class="tl-desc">Angel invests via SAFE. No shares issued. No price set.</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-node">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Between</div>
+        <div class="tl-desc">Startup operates. SAFE sits as a contract, not equity.</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-node">
+        <div class="tl-dot green"></div>
+        <div class="tl-label">Series A</div>
+        <div class="tl-desc">VC sets price. SAFE converts. Angel receives shares.</div>
+      </div>
+      <div class="tl-line"></div>
+      <div class="tl-node">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Exit / IPO</div>
+        <div class="tl-desc">Preferred converts to common. Payoffs realised.</div>
+      </div>
+    </div>
+
+    <p>The cap table at the angel stage has only one entry: the founder (100%). Angels hold a contract. The full cap table crystallises only at Series A when the SAFE converts.</p>
+  </section>
+
+  <hr>
+
+  <!-- MECHANICS -->
+  <section id="mechanics">
+    <div class="section-label">02 — Mechanics</div>
+    <h2>How a SAFE Works</h2>
+
+    <p>A SAFE specifies three key terms: the <strong>purchase amount</strong>, a <strong>valuation cap</strong>, and a <strong>discount rate</strong>. When a qualifying financing occurs (e.g. Series A), the angel converts at whichever price gives them <em>more shares</em>.</p>
+
+    <h3>The Two Conversion Prices</h3>
+    <div class="formula-block">
+<span class="comment">// SAFE Price — based on the valuation cap</span>
+<span class="highlight">SAFE Price</span>  =  Valuation Cap  ÷  Company Capitalisation
+<span class="comment">                 (shares existing BEFORE investment, excl. SAFEs)</span>
+
+<span class="comment">// Discount Price — based on the Series A round price</span>
+<span class="green">Discount Price</span>  =  Series A Share Price  ×  Discount Rate
+<span class="comment">                    e.g. $X × 0.80  (for an 80% discount rate)</span>
+
+<span class="comment">// Angel uses whichever gives MORE shares = lower price</span>
+Conversion Price  =  min(SAFE Price, Discount Price)
+
+Angel Shares  =  Purchase Amount  ÷  Conversion Price
+    </div>
+
+    <div class="callout blue">
+      <div class="callout-label">Note on discount rate</div>
+      An 80% discount rate means the angel pays 80% of the Series A price — i.e. a <strong>20% discount</strong> to the round. Lower conversion price = more shares for the angel.
+    </div>
+
+    <h3>The Circularity Problem</h3>
+    <p>This is what makes SAFEs tricky to calculate. The discount price depends on the Series A share price X. But X depends on how many total shares exist — which depends on how many shares the angel gets — which depends on X.</p>
+    <p>This is a <strong>fixed-point problem</strong> solved with simultaneous equations. The key insight from class:</p>
+    <blockquote>"The price of the round is itself dependent on whether [the angel] chooses the cap or the discount. That's the circularity — I choose the discount price versus the cap based on the price, but the price depends on whether I choose the cap or the discount."</blockquote>
+
+    <h3>Solving the Circularity</h3>
+    <p>Use the post-money valuation constraint. If post-money = $V$, share price = $x$, then total shares = $V/x$. Write all share counts in terms of $x$, set them equal to $V/x$, and solve.</p>
+    <div class="formula-block">
+Founder shares  +  Angel shares  +  VC shares  =  Total shares
+
+<span class="comment">// Substituting in terms of x (assuming discount binds):</span>
+1,250,000  +  (800,000 / 0.8x)  +  (3,000,000 / x)  =  10,000,000 / x
+
+<span class="comment">// Rearrange:</span>
+1,250,000  =  (10M - 1M - 3M) / x  =  6,000,000 / x
+
+x  =  <span class="highlight">$4.80</span>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- COMPARISON -->
+  <section id="comparison">
+    <div class="section-label">03 — Instruments</div>
+    <h2>Convertible Note vs SAFE vs Preferred Stock</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Convertible Note</th>
+          <th>SAFE</th>
+          <th>Conv. Preferred Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Security type</td>
+          <td>Debt</td>
+          <td>Equity contract</td>
+          <td>Equity (preferred)</td>
+        </tr>
+        <tr>
+          <td>Converts into</td>
+          <td>Preferred stock</td>
+          <td>Preferred stock</td>
+          <td>Common stock</td>
+        </tr>
+        <tr>
+          <td>When converts</td>
+          <td>Next financing or maturity</td>
+          <td>Next qualifying financing</td>
+          <td>IPO / liquidity event</td>
+        </tr>
+        <tr>
+          <td>Maturity date</td>
+          <td>Yes — creates repayment risk</td>
+          <td>No</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>Interest</td>
+          <td>Yes</td>
+          <td>No</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>Speed / simplicity</td>
+          <td>Fast, less diligence</td>
+          <td>Fastest, simplest</td>
+          <td>Slower — full negotiation</td>
+        </tr>
+        <tr>
+          <td>Price set at</td>
+          <td>Deferred to next round</td>
+          <td>Deferred to next round</td>
+          <td>Time of investment</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout green">
+      <div class="callout-label">Practical takeaway</div>
+      For most sophisticated early-stage deals today, a SAFE is preferred over a convertible note — no maturity risk, simpler contract, no interest accrual. However, some angels still prefer convertible notes for their debt-like protections.
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- ASSIGNMENT -->
+  <section id="assignment">
+    <div class="section-label">04 — In-Class Assignment</div>
+    <h2>Working Through the SAFE Cap Table</h2>
+
+    <p><span class="tag">Given</span> Angels invest $800k via SAFE · Valuation cap $5M · Discount rate 80% · Founder has 1,250,000 shares · Series A raises $3M at $10M post-money valuation</p>
+
+    <h3>Step-by-Step Method</h3>
+    <ol class="steps">
+      <li>
+        <div class="step-body">
+          <div class="step-title">Calculate the SAFE Price</div>
+          SAFE Price = Valuation Cap ÷ Company Capitalisation (founder shares only, excluding SAFEs)
+          <div class="formula-block">SAFE Price = $5,000,000 ÷ 1,250,000 = <span class="highlight">$4.00 / share</span></div>
+          This is fixed regardless of scenario.
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <div class="step-title">Set up the equation for share price X</div>
+          Let X = Series A price per share. Use the post-money valuation constraint: total shares = $10M / X.
+          <div class="formula-block">Founder + Angel + VC  =  10,000,000 / X
+
+1,250,000  +  (Angel investment / conversion price)  +  (3,000,000 / X)  =  10,000,000 / X</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <div class="step-title">Assume discount binds, solve for X</div>
+          If discount binds, angel conversion price = 0.8X. Substitute and solve:
+          <div class="formula-block">1,250,000  +  (800,000 / 0.8X)  +  (3,000,000 / X)  =  10,000,000 / X
+
+1,250,000  +  (1,000,000 / X)  +  (3,000,000 / X)  =  10,000,000 / X
+
+1,250,000  =  6,000,000 / X
+
+X  =  <span class="highlight">$4.80</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <div class="step-title">Verify which mechanism binds</div>
+          Compare SAFE price ($4.00) vs Discount price (0.8 × $4.80 = $3.84). Angel picks whichever is <em>lower</em> (gives more shares).
+          <div class="formula-block">Discount price = 0.8 × $4.80 = <span class="green">$3.84</span>
+SAFE price     =              <span class="highlight">$4.00</span>
+
+→  $3.84 &lt; $4.00  →  <span class="green">Discount binds ✓</span>
+   (assumption in step 3 was correct)</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <div class="step-title">Calculate all share counts and build cap table</div>
+          <div class="formula-block">Angel shares  =  $800,000 / $3.84  =  208,333
+VC shares     =  $3,000,000 / $4.80 =  625,000
+Founder                              =  1,250,000
+Total                                =  2,083,333
+
+Check: $10M / 2,083,333 = $4.80 ✓</div>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Interactive Cap Table</h3>
+
+    <div id="cap-table-section">
+      <div class="ct-title">Cap Table Calculator</div>
+      <div class="ct-sub">Toggle between scenarios to see how the conversion mechanism changes</div>
+
+      <div class="scenario-tabs">
+        <button class="tab-btn active" onclick="showScenario(1)">Scenario A — 30% for $3M</button>
+        <button class="tab-btn" onclick="showScenario(2)">Scenario B — 15% for $3M</button>
+        <button class="tab-btn" onclick="showScenario(3)">Scenario B (no cap)</button>
+      </div>
+
+      <div id="workings-area" class="workings"></div>
+
+      <div class="ct-output">
+        <table class="cap-tbl">
+          <thead>
+            <tr>
+              <th>Stakeholder</th>
+              <th>Shares</th>
+              <th>Ownership %</th>
+              <th>Conv. Price</th>
+            </tr>
+          </thead>
+          <tbody id="cap-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="bar-chart" id="bar-chart"></div>
+      <div class="bar-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div>Founder</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Angels</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div>Series A</div>
+      </div>
+
+      <div class="intuition" id="intuition-box"></div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- INTUITION -->
+  <section id="intuition">
+    <div class="section-label">05 — Intuition</div>
+    <h2>Why the Cap Matters for Incentives</h2>
+
+    <p>Beyond the maths, the cap has an important economic function: it <strong>aligns incentives</strong> between the angel and the founder.</p>
+
+    <div class="callout">
+      <div class="callout-label">Without a cap</div>
+      The angel converts at a fixed 20% discount to whatever the Series A price is. If the company's valuation goes up a lot, the Series A price is high — meaning the angel pays more per share and gets fewer shares. The angel's return from a higher valuation is diluted away. This creates a perverse incentive: the angel may not want to help push the valuation up.
+    </div>
+
+    <div class="callout green">
+      <div class="callout-label">With a cap</div>
+      Once the Series A price exceeds the cap-implied price, the angel's shares are fixed. They are now fully "inside" alongside the founder. Both parties benefit equally from a higher valuation — their incentives are perfectly aligned. As Prof. Nanda put it: "Give them a low cap, make sure that they're fully incentivised, and then you both go and raise at a very high valuation."
+    </div>
+
+    <h3>Share Price Intuition — Scenario B</h3>
+    <p>When the cap binds in Scenario B, angels convert at $4.00 instead of $10.24 (discount price). This means angels take <em>more shares</em>. More angel shares means the VC needs more shares to reach their target 15%. More total shares at the same $3M investment means the share price must be <em>lower</em> — which is why it comes in at $11.73, not $12.80.</p>
+    <p>This is the core circularity: angel's choice affects VC's price, which affects angel's choice.</p>
+  </section>
+
+</div><!-- /container -->
+
+<script>
+const scenarios = {
+  1: {
+    label: "Scenario A — Series A takes 30% for $3M",
+    postMoney: 10_000_000,
+    vcInvestment: 3_000_000,
+    angelInvestment: 800_000,
+    founderShares: 1_250_000,
+    valuationCap: 5_000_000,
+    discountRate: 0.8,
+    mechanism: "discount",
+    sharePrice: 4.80,
+    conversionPrice: 3.84,
+    angelShares: 208333,
+    vcShares: 625000,
+    noCapAngel: null,
+    workingsHtml: `
+      <div class="w-section-head">Step 1 — SAFE Price</div>
+      <div class="w-row"><span>Valuation Cap ÷ Founder Shares</span><span class="w-val">$5,000,000 ÷ 1,250,000 = <b>$4.00</b></span></div>
+
+      <div class="w-section-head">Step 2 — Solve for X (assume discount binds)</div>
+      <div class="w-row"><span>1,250,000 + 1,000,000/X + 3,000,000/X = 10,000,000/X</span><span></span></div>
+      <div class="w-row"><span>1,250,000 = 6,000,000 / X</span><span class="w-val">X = <b>$4.80</b></span></div>
+
+      <div class="w-section-head">Step 3 — Verify mechanism</div>
+      <div class="w-row"><span>Discount price = 0.8 × $4.80</span><span class="w-highlight">$3.84</span></div>
+      <div class="w-row"><span>SAFE price</span><span class="w-val">$4.00</span></div>
+      <div class="w-row"><span>$3.84 &lt; $4.00 → <b>Discount binds ✓</b></span><span></span></div>
+
+      <div class="w-section-head">Step 4 — Shares</div>
+      <div class="w-row"><span>Angel shares = $800,000 / $3.84</span><span class="w-highlight">208,333</span></div>
+      <div class="w-row"><span>VC shares = $3,000,000 / $4.80</span><span class="w-green">625,000</span></div>
+    `,
+    intuition: `<strong>Discount binds</strong> because the Series A price ($4.80) is close to the cap-implied SAFE price ($4.00). The 20% discount brings the angel's price to $3.84, which is cheaper than $4.00, so the angel uses the discount. They end up with 208,333 shares — slightly more than the 200,000 they'd get under the cap.`
+  },
+  2: {
+    label: "Scenario B — Series A takes 15% for $3M",
+    postMoney: 10_000_000,
+    vcInvestment: 3_000_000,
+    angelInvestment: 800_000,
+    founderShares: 1_250_000,
+    valuationCap: 5_000_000,
+    discountRate: 0.8,
+    mechanism: "cap",
+    sharePrice: 11.73,
+    conversionPrice: 4.00,
+    angelShares: 200000,
+    vcShares: 255882,
+    workingsHtml: `
+      <div class="w-section-head">Step 1 — SAFE Price</div>
+      <div class="w-row"><span>Valuation Cap ÷ Founder Shares</span><span class="w-val">$5,000,000 ÷ 1,250,000 = <b>$4.00</b></span></div>
+
+      <div class="w-section-head">Step 2 — Cap binds → angel shares = 200,000</div>
+      <div class="w-row"><span>Angel shares = $800,000 / $4.00</span><span class="w-green">200,000</span></div>
+
+      <div class="w-section-head">Step 3 — Solve for VC shares (15% target)</div>
+      <div class="w-row"><span>Founder + Angel = 1,450,000 = 85% of total</span><span></span></div>
+      <div class="w-row"><span>Total shares = 1,450,000 / 0.85</span><span class="w-val">1,705,882</span></div>
+      <div class="w-row"><span>VC shares = 15% × 1,705,882</span><span class="w-green">255,882</span></div>
+
+      <div class="w-section-head">Step 4 — Verify share price & mechanism</div>
+      <div class="w-row"><span>Share price = $3,000,000 / 255,882</span><span class="w-val">$11.73</span></div>
+      <div class="w-row"><span>Discount price = 0.8 × $11.73</span><span class="w-val">$9.38</span></div>
+      <div class="w-row"><span>$9.38 &gt; $4.00 → <b>Cap binds ✓</b></span><span></span></div>
+    `,
+    intuition: `<strong>Cap binds</strong> because the Series A price ($11.73) is far above the cap-implied price ($4.00). The discount would give angels $9.38 per share — still worse than $4.00. So angels use the cap, paying $4.00 and receiving 200,000 shares. Note the share price ($11.73) is less than the discount-scenario price ($12.80) — because angels took more shares at $4.00, diluting the VC, who needs more shares to reach 15%, pushing the price down.`
+  },
+  3: {
+    label: "Scenario B — No cap (discount only)",
+    postMoney: 10_000_000,
+    vcInvestment: 3_000_000,
+    angelInvestment: 800_000,
+    founderShares: 1_250_000,
+    valuationCap: null,
+    discountRate: 0.8,
+    mechanism: "discount",
+    sharePrice: 12.80,
+    conversionPrice: 10.24,
+    angelShares: 78125,
+    vcShares: 234375,
+    workingsHtml: `
+      <div class="w-section-head">No cap — angel always takes discount price</div>
+      <div class="w-section-head">Step 1 — Solve for X (discount always binds)</div>
+      <div class="w-row"><span>1,250,000 + 1,000,000/X + 3,000,000/X = 20,000,000/X</span><span></span></div>
+      <div class="w-row"><span>1,250,000 = 16,000,000/X</span><span class="w-val">X = <b>$12.80</b></span></div>
+
+      <div class="w-section-head">Step 2 — Shares</div>
+      <div class="w-row"><span>Discount price = 0.8 × $12.80</span><span class="w-highlight">$10.24</span></div>
+      <div class="w-row"><span>Angel shares = $800,000 / $10.24</span><span class="w-highlight">78,125</span></div>
+      <div class="w-row"><span>VC shares = $3,000,000 / $12.80</span><span class="w-green">234,375</span></div>
+    `,
+    intuition: `<strong>Without a cap</strong>, the angel converts at the discount price of $10.24. They get only 78,125 shares — far fewer than the 200,000 they'd get with the cap. The founder keeps 80% (vs 74% with cap). This shows the cap's power: it protects the angel in a high-valuation scenario. It also illustrates the incentive problem: without a cap, a higher Series A valuation means the angel gets fewer shares for the same investment.`
+  }
+};
+
+function fmt(n) {
+  if (n == null) return '—';
+  if (Number.isInteger(n)) return n.toLocaleString();
+  return '$' + n.toFixed(2);
+}
+
+function showScenario(n) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === n - 1));
+  const s = scenarios[n];
+
+  // workings
+  document.getElementById('workings-area').innerHTML = s.workingsHtml;
+
+  // cap table
+  const total = s.founderShares + s.angelShares + s.vcShares;
+  const fp = (s.founderShares / total * 100).toFixed(1);
+  const ap = (s.angelShares / total * 100).toFixed(1);
+  const vp = (s.vcShares / total * 100).toFixed(1);
+
+  const mechBadge = s.mechanism === 'discount'
+    ? `<span class="badge badge-disc">discount</span>`
+    : `<span class="badge badge-cap">cap</span>`;
+
+  document.getElementById('cap-tbody').innerHTML = `
+    <tr>
+      <td>Founder</td>
+      <td>${s.founderShares.toLocaleString()}</td>
+      <td>${fp}%</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Angels (SAFE)</td>
+      <td>${s.angelShares.toLocaleString()}</td>
+      <td>${ap}%</td>
+      <td>${fmt(s.conversionPrice)} ${mechBadge}</td>
+    </tr>
+    <tr>
+      <td>Series A (VC)</td>
+      <td>${s.vcShares.toLocaleString()}</td>
+      <td>${vp}%</td>
+      <td>${fmt(s.sharePrice)}</td>
+    </tr>
+    <tr class="total-row">
+      <td>Total</td>
+      <td>${total.toLocaleString()}</td>
+      <td>100%</td>
+      <td></td>
+    </tr>
+  `;
+
+  // bar
+  document.getElementById('bar-chart').innerHTML = `
+    <div class="bar-seg founder" style="flex:${fp}">${fp}%</div>
+    <div class="bar-seg angel"   style="flex:${ap}">${ap}%</div>
+    <div class="bar-seg vc"      style="flex:${vp}">${vp}%</div>
+  `;
+
+  // intuition
+  document.getElementById('intuition-box').innerHTML = s.intuition;
+}
+
+showScenario(1);
+</script>
+</body>
+</html>
